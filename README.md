@@ -27,16 +27,29 @@ This scraper fetches `.ics` calendar files from the UM FOV schedule system and s
 cd um-calendar-scraper
 ```
 
-### 2. Install Dependencies
+### 2. Create and Activate Virtual Environment (Recommended)
 
 ```bash
-pip install beautifulsoup4 requests
+# Create virtual environment
+python -m venv .venv
+
+# Activate it (Linux/Mac)
+source .venv/bin/activate
+
+# Activate it (Windows)
+.venv\Scripts\activate
 ```
 
-Or use a requirements file if you create one:
+### 3. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
+```
+
+Or install manually:
+
+```bash
+pip install beautifulsoup4 requests
 ```
 
 ## Usage
@@ -143,12 +156,6 @@ All errors are logged to console with descriptive messages.
 
 ## Future Improvements
 
-Potential enhancements:
-- Add caching to avoid redundant requests
-- Implement automatic scheduling (cron job)
-- Add logging to file instead of console
-- Support for filtering specific calendars
-- Progress indicators for batch downloads
 - Retry logic for failed downloads
 
 ## Related Projects

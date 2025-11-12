@@ -38,33 +38,48 @@ def saveFiles():
     os.makedirs(calendarsDir, exist_ok=True)
 
     for name in names:
-        url = f"{baseUrl}{name}.ics"
+        try:
+            url = f"{baseUrl}{name}.ics"
 
-        prev = meta.get(name, {})
-        headers = {}
-        if prev.get("etag"):
-            headers["If-None-Match"] = prev["etag"]
-        if prev.get("lastModified"):
-            headers["If-Modified-Since"] = prev["lastModified"]
+            prev = meta.get(name, {})
+            headers = {}
+            if prev.get("etag"):
+                headers["If-None-Match"] = prev["etag"]
+            if prev.get("lastModified"):
+                headers["If-Modified-Since"] = prev["lastModified"]
 
-        resp = session.get(url, headers=headers, stream=True, timeout=20)
+            resp = session.get(url, headers=headers, stream=True, timeout=20)
 
-        if resp.status_code == 304:
-            print(f"[unchanged] {name}")
-            continue
+            if resp.status_code == 304:
+                print(f"[unchanged] {name}")
+                continue
 
-        resp.raise_for_status()
+            resp.raise_for_status()
 
-        outPath = os.path.join(calendarsDir, f"{name}.ics")
-        writeFile(outPath, resp.iter_content(8192))
+            outPath = os.path.join(calendarsDir, f"{name}.ics")
+            writeFile(outPath, resp.iter_content(8192))
 
-        meta[name] = {
+            meta[name] = {
             "etag": resp.headers.get("ETag"),
             "lastModified": resp.headers.get("Last-Modified"),
-        }
-        print(f"[updated] {name}")
+            }
+            print(f"[updated] {name}")
+        except requests.Timeout:
+            print(f"Error: Timeout downloading {name}")
+            continue  # 1 fails => skip only that one
+        except requests.RequestException as e:
+            print(f"Error: Network error for {name}: {e}")
+            continue
+        except Exception as e:
+            print(f"Error: Unexpected error for {name}: {e}")
+            continue
 
-    saveMeta(meta)
+    try:
+        saveMeta(meta)
+        print(f"Updated {len(meta)} calendar metadata")
+    except Exception as ex:
+        print(f"Couldnt saved metadata Error: {ex}")
+
 
 if __name__ == "__main__":
     saveFiles()
