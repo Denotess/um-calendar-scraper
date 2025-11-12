@@ -4,7 +4,7 @@ A Python web scraper for downloading calendar files (.ics) from the University o
 
 ## What It Does
 
-This scraper fetches `.ics` calendar files from the UM FOV schedule system and saves them locally. The calendars can then be served through the [um-calendar-api-cs](../c%23/asp.net/um-calendar-api-cs) API.
+This scraper fetches `.ics` calendar files from the UM FOV schedule system and saves them locally. The calendars can then be served through the [um-calendar-api-cs](https://github.com/Denotess/um-calendar-api-cs) API.
 
 ## Features
 
